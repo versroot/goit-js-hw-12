@@ -1,4 +1,5 @@
 const picsList = document.querySelector('.gallery');
+
 function renderImages(pics) {
   const markup = pics
     .map(pic => {
@@ -28,6 +29,7 @@ function renderImages(pics) {
     })
     .join('');
   picsList.insertAdjacentHTML('beforeend', markup);
+  loadMore.style.display = 'block';
 }
 
 export { renderImages };
