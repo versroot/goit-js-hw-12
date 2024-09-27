@@ -1,18 +1,122 @@
-/**
-  |============================
-  | include css partials with
-  | default @import url()
-  |============================
-*/
-/* Common styles */
-@import url('./reset.css');
-@import url('./base.css');
-@import url('./container.css');
-@import url('./animations.css');
+* {
+  box-sizing: border-box;
+}
 
-/* Sections style */
-@import url('./header.css');
-@import url('./vite-promo.css');
-@import url('./badges.css');
-@import url('./back-link.css');
-@import url('./footer.css');
+li {
+  list-style-type: none;
+}
+.gallery {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 24px;
+}
+.gallery-item {
+  position: relative;
+  border: 1px solid black;
+  width: 360px;
+  height: 200px;
+  overflow: hidden;
+}
+.gallery-item img {
+  width: 100%;
+  height: auto;
+  display: block;
+  object-fit: cover;
+}
+.properties {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  background: white;
+  padding: 5px;
+  display: flex;
+  flex-direction: row;
+  justify-content: space-evenly;
+  z-index: 1;
+  height: 40px;
+  align-items: center;
+}
+
+.property {
+  display: flex;
+  flex-direction: column;
+  text-align: center;
+}
+
+.key {
+  font-family: Montserrat;
+  font-size: 12px;
+  font-weight: 600;
+  line-height: 16px;
+  letter-spacing: 0.04em;
+  text-align: left;
+  color: #2e2f42;
+}
+
+.values {
+  font-family: Montserrat;
+  font-size: 12px;
+  font-weight: 400;
+  line-height: 24px;
+  letter-spacing: 0.04em;
+  text-align: left;
+
+  background: #2e2f42;
+}
+
+#searchForm {
+  width: 371px;
+  height: 36px;
+  display: flex;
+  margin: 0 auto;
+}
+#input {
+  width: 272px;
+  padding: 8px;
+  margin-right: 8px;
+  border: 1px solid #ccc;
+  border-radius: 3px;
+}
+#input:hover {
+  border: 1px solid black;
+}
+
+#input:focus {
+  border: 1px solid #007bff;
+  outline: none;
+}
+#searchButton {
+  padding: 10px;
+  background-color: #0056b3;
+  border: none;
+  border-radius: 3px;
+  color: white;
+  font-size: 16px;
+  cursor: pointer;
+}
+
+#searchButton:hover {
+  background-color: #007bff;
+}
+
+#loadingMessage {
+  margin: 70px auto;
+  width: 48px;
+  height: 48px;
+  border: 5px solid #0056b3;
+  border-bottom-color: transparent;
+  border-radius: 50%;
+  display: inline-block;
+  box-sizing: border-box;
+  animation: rotation 1s linear infinite;
+}
+
+@keyframes rotation {
+  0% {
+    transform: rotate(0deg);
+  }
+  100% {
+    transform: rotate(360deg);
+  }
+}
