@@ -1,5 +1,6 @@
 import axios from 'axios';
 let totalHits = 0;
+let perPage = 20;
 axios.defaults.baseURL = 'https://pixabay.com/api/';
 async function searchImages(query, page = 1) {
   const params = {
@@ -9,7 +10,7 @@ async function searchImages(query, page = 1) {
     orientation: 'horizontal',
     safesearch: 'true',
     page: page,
-    per_page: '20',
+    per_page: perPage,
   };
   loadingMessage.style.display = 'block';
 
@@ -24,4 +25,4 @@ async function searchImages(query, page = 1) {
   }
 }
 
-export { searchImages };
+export { searchImages, totalHits, perPage };

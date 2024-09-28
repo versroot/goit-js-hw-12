@@ -3,17 +3,19 @@ import 'izitoast/dist/css/iziToast.min.css';
 import SimpleLightbox from 'simplelightbox';
 import 'simplelightbox/dist/simple-lightbox.min.css';
 import { renderImages } from './render-functions.js';
-import { searchImages } from './pixabay-api.js';
+import { searchImages, totalHits, perPage } from './pixabay-api.js';
 
 const fetchPicsBtn = document.querySelector('#searchButton');
 const picsList = document.querySelector('.gallery');
 const input = document.querySelector('#input');
 const loadingMessage = document.querySelector('#loadingMessage');
 const loadMore = document.querySelector('#loadMore');
-let currentPage = 1;
+
+let currentPage;
 
 fetchPicsBtn.addEventListener('click', async event => {
   event.preventDefault();
+  currentPage = 1;
   picsList.innerHTML = '';
   loadMore.style.display = 'none';
   loadingMessage.style.display = 'block';
@@ -84,11 +86,36 @@ loadMore.addEventListener('click', async event => {
   try {
     const pics = await searchImages(query, currentPage);
 
-    if (pics.hits.length === 0) {
-      console.log('No pics');
-      iziError;
+    if (totalHits <= currentPage * perPage) {
+      console.log('No more pics');
+      loadMore.style.display = 'none';
+      iziToast.error({
+        title: '',
+        titleColor: '#FFFFFF',
+        message: 'No more pics',
+        iconUrl:
+          'https://raw.githubusercontent.com/versroot/goit-js-hw-11/refs/heads/main/src/img/bi_x-octagon.svg',
+        backgroundColor: '#EF4040',
+        messageColor: '#FFFFFF',
+        close: true,
+        maxWidth: '432px',
+
+        fontSize: '16px',
+        fontWeight: '400',
+        lineHeight: '24px',
+        letterSpacing: '0.5px',
+
+        onOpening: closeX,
+      });
     } else {
       renderImages(pics.hits);
+      const galleryItem = document.querySelector('.gallery-item');
+      const rect = galleryItem.getBoundingClientRect();
+      console.log(rect.height);
+      window.scrollBy({
+        top: rect.height * 2,
+        behavior: 'smooth',
+      });
       lightboxgallery.refresh();
     }
     loadingMessage.style.display = 'none';
