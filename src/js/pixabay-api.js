@@ -1,5 +1,5 @@
 import axios from 'axios';
-import { closeX } from './main';
+import { closeX } from '../main';
 let totalHits = 0;
 let perPage = 15;
 axios.defaults.baseURL = 'https://pixabay.com/api/';

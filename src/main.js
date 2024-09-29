@@ -2,16 +2,16 @@ import iziToast from 'izitoast';
 import 'izitoast/dist/css/iziToast.min.css';
 import SimpleLightbox from 'simplelightbox';
 import 'simplelightbox/dist/simple-lightbox.min.css';
-import { renderImages } from './render-functions.js';
-import { searchImages, totalHits, perPage } from './pixabay-api.js';
+import { renderImages } from './js/render-functions.js';
+import { searchImages, totalHits, perPage } from './js/pixabay-api.js';
 
-const fetchPicsBtn = document.querySelector('#searchButton');
 const picsList = document.querySelector('.gallery');
 const input = document.querySelector('#input');
 const loadingMessage = document.querySelector('#loadingMessage');
 const loadMore = document.querySelector('#loadMore');
+const form = document.querySelector('#searchForm');
 
-let currentPage = 1;
+let currentPage;
 function showErrorToast(message) {
   iziToast.error({
     title: '',
@@ -31,8 +31,9 @@ function showErrorToast(message) {
   });
 }
 
-fetchPicsBtn.addEventListener('click', async event => {
+form.addEventListener('submit', async event => {
   event.preventDefault();
+  currentPage = 1;
   picsList.innerHTML = '';
   loadMore.style.display = 'none';
 
@@ -40,7 +41,7 @@ fetchPicsBtn.addEventListener('click', async event => {
   if (query != '') {
     loadingMessage.style.display = 'block';
     try {
-      const pics = await searchImages(query); // немає необхідності передавати currentPage, по дефолту у функції page = 1
+      const pics = await searchImages(query, currentPage);
 
       if (pics.hits.length === 0) {
         console.log('No pics');
