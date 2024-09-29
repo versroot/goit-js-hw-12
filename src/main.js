@@ -12,46 +12,60 @@ const loadingMessage = document.querySelector('#loadingMessage');
 const loadMore = document.querySelector('#loadMore');
 
 let currentPage;
+function showErrorToast(message) {
+  iziToast.error({
+    title: '',
+    titleColor: '#FFFFFF',
+    message: message,
+    iconUrl:
+      'https://raw.githubusercontent.com/versroot/goit-js-hw-11/refs/heads/main/src/img/bi_x-octagon.svg',
+    backgroundColor: '#EF4040',
+    messageColor: '#FFFFFF',
+    close: true,
+    maxWidth: '432px',
+    fontSize: '16px',
+    fontWeight: '400',
+    lineHeight: '24px',
+    letterSpacing: '0.5px',
+    onOpening: closeX,
+  });
+}
 
 fetchPicsBtn.addEventListener('click', async event => {
   event.preventDefault();
   currentPage = 1;
   picsList.innerHTML = '';
   loadMore.style.display = 'none';
-  loadingMessage.style.display = 'block';
+
   const query = input.value.trim();
-  try {
-    const pics = await searchImages(query);
+  if (query != '') {
+    loadingMessage.style.display = 'block';
+    try {
+      const pics = await searchImages(query); // немає необхідності передавати currentPage, по дефолту у функції page = 1
 
-    if (pics.hits.length === 0) {
-      console.log('No pics');
-      iziToast.error({
-        title: '',
-        titleColor: '#FFFFFF',
-        message:
-          ' Sorry, there are no images matching your search query. Please, try again!',
-        iconUrl:
-          'https://raw.githubusercontent.com/versroot/goit-js-hw-11/refs/heads/main/src/img/bi_x-octagon.svg',
-        backgroundColor: '#EF4040',
-        messageColor: '#FFFFFF',
-        close: true,
-        maxWidth: '432px',
-
-        fontSize: '16px',
-        fontWeight: '400',
-        lineHeight: '24px',
-        letterSpacing: '0.5px',
-
-        onOpening: closeX,
-      });
-    } else {
-      renderImages(pics.hits);
-      lightboxgallery.refresh();
+      if (pics.hits.length === 0) {
+        console.log('No pics');
+        showErrorToast(
+          'Sorry, there are no images matching your search query. Please, try again!'
+        );
+        return;
+      } else {
+        renderImages(pics.hits);
+        lightboxgallery.refresh();
+      }
+      loadingMessage.style.display = 'none';
+      if (totalHits <= currentPage * perPage) {
+        console.log('No more pics');
+        loadMore.style.display = 'none';
+        showErrorToast('No more pics');
+      }
+    } catch (error) {
+      console.log(error);
+      showErrorToast(error);
+      loadingMessage.style.display = 'none';
     }
-    loadingMessage.style.display = 'none';
-  } catch (error) {
-    console.log(error);
-    loadingMessage.style.display = 'none';
+  } else {
+    showErrorToast('Empty request');
   }
 });
 
@@ -76,51 +90,31 @@ lightboxgallery.on('show.simplelightbox', function () {});
 
 loadMore.addEventListener('click', async event => {
   event.preventDefault();
-  currentPage += 1;
-});
-
-loadMore.addEventListener('click', async event => {
-  event.preventDefault();
-  currentPage += 1;
   const query = input.value.trim();
+
   try {
     const pics = await searchImages(query, currentPage);
-
-    if (totalHits <= currentPage * perPage) {
+    if (pics.hits.length === 0 || totalHits <= currentPage * perPage) {
       console.log('No more pics');
       loadMore.style.display = 'none';
-      iziToast.error({
-        title: '',
-        titleColor: '#FFFFFF',
-        message: 'No more pics',
-        iconUrl:
-          'https://raw.githubusercontent.com/versroot/goit-js-hw-11/refs/heads/main/src/img/bi_x-octagon.svg',
-        backgroundColor: '#EF4040',
-        messageColor: '#FFFFFF',
-        close: true,
-        maxWidth: '432px',
-
-        fontSize: '16px',
-        fontWeight: '400',
-        lineHeight: '24px',
-        letterSpacing: '0.5px',
-
-        onOpening: closeX,
-      });
-    } else {
-      renderImages(pics.hits);
-      const galleryItem = document.querySelector('.gallery-item');
-      const rect = galleryItem.getBoundingClientRect();
-      console.log(rect.height);
-      window.scrollBy({
-        top: rect.height * 2,
-        behavior: 'smooth',
-      });
-      lightboxgallery.refresh();
+      showErrorToast('No more pics');
+      return;
     }
+
+    renderImages(pics.hits);
+    const galleryItem = document.querySelector('.gallery-item');
+    const rect = galleryItem.getBoundingClientRect();
+    console.log(rect.height);
+    window.scrollBy({
+      top: rect.height * 2,
+      behavior: 'smooth',
+    });
+    lightboxgallery.refresh();
+    currentPage += 1;
     loadingMessage.style.display = 'none';
   } catch (error) {
     console.log(error);
     loadingMessage.style.display = 'none';
   }
 });
+export { closeX };

@@ -1,6 +1,7 @@
 import axios from 'axios';
+import { closeX } from './main';
 let totalHits = 0;
-let perPage = 20;
+let perPage = 15;
 axios.defaults.baseURL = 'https://pixabay.com/api/';
 async function searchImages(query, page = 1) {
   const params = {
@@ -20,7 +21,25 @@ async function searchImages(query, page = 1) {
     totalHits = response.data.totalHits;
     return response.data;
   } catch (error) {
-    console.log(error);
+    iziToast.error({
+      title: '',
+      titleColor: '#FFFFFF',
+      message: error,
+      iconUrl:
+        'https://raw.githubusercontent.com/versroot/goit-js-hw-11/refs/heads/main/src/img/bi_x-octagon.svg',
+      backgroundColor: '#EF4040',
+      messageColor: '#FFFFFF',
+      close: true,
+      maxWidth: '432px',
+
+      fontSize: '16px',
+      fontWeight: '400',
+      lineHeight: '24px',
+      letterSpacing: '0.5px',
+
+      onOpening: closeX,
+    });
+
     loadingMessage.style.display = 'none';
   }
 }
