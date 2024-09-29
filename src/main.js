@@ -11,7 +11,7 @@ const input = document.querySelector('#input');
 const loadingMessage = document.querySelector('#loadingMessage');
 const loadMore = document.querySelector('#loadMore');
 
-let currentPage;
+let currentPage = 1;
 function showErrorToast(message) {
   iziToast.error({
     title: '',
@@ -33,7 +33,6 @@ function showErrorToast(message) {
 
 fetchPicsBtn.addEventListener('click', async event => {
   event.preventDefault();
-  currentPage = 1;
   picsList.innerHTML = '';
   loadMore.style.display = 'none';
 
@@ -67,6 +66,7 @@ fetchPicsBtn.addEventListener('click', async event => {
   } else {
     showErrorToast('Empty request');
   }
+  currentPage += 1;
 });
 
 function closeX(instance, toast) {
