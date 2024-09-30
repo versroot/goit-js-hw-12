@@ -95,12 +95,6 @@ loadMore.addEventListener('click', async event => {
 
   try {
     const pics = await searchImages(query, currentPage);
-    if (pics.hits.length === 0 || totalHits <= currentPage * perPage) {
-      console.log('No more pics');
-      loadMore.style.display = 'none';
-      showErrorToast('No more pics');
-      return;
-    }
 
     renderImages(pics.hits);
     const galleryItem = document.querySelector('.gallery-item');
@@ -111,6 +105,11 @@ loadMore.addEventListener('click', async event => {
       behavior: 'smooth',
     });
     lightboxgallery.refresh();
+    if (pics.hits.length === 0 || totalHits <= (currentPage + 1) * perPage) {
+      console.log('No more pics');
+      loadMore.style.display = 'none';
+      showErrorToast('No more pics');
+    }
     currentPage += 1;
     loadingMessage.style.display = 'none';
   } catch (error) {
